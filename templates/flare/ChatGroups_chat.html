@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>Flare Chat</title>
+
+    {% load staticfiles %}
+    <!-- Bootstrap Core CSS -->
+    <link href={% static "css/bootstrap.min.css" %} rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href={% static "css/sb-admin.css" %} rel="stylesheet">
+    <script type="text/javascript" src = "{% static 'jquery-1.12.1.min.js' %}"></script>
+    <script type="text/javascript" src = "{% static 'reconnecting-websocket.min.js' %}"></script>
+
+    <!-- Morris Charts CSS -->
+    <link href={% static "css/plugins/morris.css" %} rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href= {% static "font-awesome/css/font-awesome.min.css" %} rel="stylesheet" type="text/css">
+
+	    <script src={% static "js/jquery.js" %}></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src= {% static "js/bootstrap.min.js" %}></script>
+    <link href={%  static "css/style.css" %} rel="stylesheet" type="text/css" />
+
+    <!-- Morris Charts JavaScript -->
+    <script src= {% static "js/plugins/morris/raphael.min.js" %}></script>
+    <script src= {% static "js/plugins/morris/morris.min.js" %}></script>
+    <script src= {% static  "js/plugins/morris/morris-data.js" %}></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+
+
+        td{
+            color:white;
+            background-color:transparent;
+        }
+        tr{
+            border-bottom: double;
+            border-color: #00CCFF;
+        }
+        table {
+              width: 100%;
+        }
+
+thead, tbody, tr, td, th { display: block; }
+tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+    width: 100px;
+}
+
+thead th {
+    height: 30px;
+    line-height: 30px;
+    /*text-align: left;*/
+}
+
+tbody {
+    height: 350px;
+    overflow-y: auto;
+}
+
+tbody { border-top: 2px solid black; }
+
+    </style>
+
+
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<body onload="one()">
+
+
+
+       <audio id="msc" autoplay="autoplay">
+    <source  src={% static "music/music1.mp3" %} type="audio/mp3">
+    </audio>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href= {% url "groups_list" %}>FLARE CHAT</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                <li class="dropdown">
+                    <a href = {% url "logout" %} class="dropdown-toggle" >Logout</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src={% static "images/mute.jpg" %} height="20px" width="20px" onclick="pause_stop()" />
+                    </a>
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li class="active">
+                        <a href= {% url "groups_list" %}><i class="fa fa-fw fa-dashboard"></i>Flare Groups</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper" style="background-image: url({% static "images/2.jpg" %})">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <h1 class="page-header" style = "color: red">
+                            {{ group.name }}
+                        </h1>
+                         <center>
+                         <form id="chatform" onload="two()">
+                               <table id ="chat">
+                               <tbody id="textBody">
+                                        {% for message in messages %}
+                                            <tr>
+
+                                                    <td>{{ message.creator }}::</td>
+                                                    <td>{{ message.text_message }}</td>
+                                                    <td align="right">{{ message.formatted_timestamp }}</td>
+                                            </tr>
+                                        {% endfor %}
+                               </tbody>
+                                <tfoot>
+                                    <td colspan = 2>
+                                           <input id = "message" type = "text" placeholder = "write a message" size="160px" autocomplete="off" style="font-color:red;color:red;font-size: 12px;font-family: Arial;">
+                                           <button type = "submit" id="go" style="background-color:black;color:red">send</button>
+                                     </td>
+                                </tfoot>
+                                </table>
+                          </form>
+                         </center>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div><br/><br/><br/><br/><br/><br/>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script type="text/javascript">
+        c = 1;
+        function pause_stop()
+        {
+            if(c%2 != 0) {
+                document.getElementById('msc').pause();
+                c++;
+            }
+            else {
+                document.getElementById('msc').play();
+                c++;
+            }
+        }
+    </script>
+    <script>
+          $(function(){
+              var ws_scheme = window.location.protocol == "https:"? "wss" : "ws";
+              var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + window.location.pathname);
+
+              chatsock.onmessage = function(message){
+                  var data = JSON.parse(message.data);
+                  var chat = $("#chat");
+                  var ele = $('<tr></tr>');
+
+                  ele.append(
+                          $("<td></td>").text(data.creator)
+                  );
+                  ele.append(
+                          $("<td></td>").text(data.text_message)
+                  );
+                  ele.append(
+                          $("<td></td>").text(data.timestamp).css('text-align', 'right')
+                  );
+                  console.log("from chat");
+                  one();
+                  chat.append(ele);
+                  one();
+                  console.log("from me");
+              };
+              $("#chatform").on("submit", function(event) {
+
+                  var message = {
+
+                      creator: '{{ user.get_username }}',
+                      text_message : $('#message').val()
+                  };
+                  chatsock.send(JSON.stringify(message));
+                  $("#message").val('').focus();
+                  console.log("from message");
+                  return false;
+              });
+          });
+
+      </script>
+      <script>
+          function one (){
+              var $body = $('tbody');
+              var list = $body.children('tr');
+              $body.html(list.get().reverse());
+          }
+          function two (){
+              var $body = $('tbody');
+              var list = $body.children('tr');
+              $body.html(list.get().reverse());
+          }
+      </script>
+</body>
+
+</html>
