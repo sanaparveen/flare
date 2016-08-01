@@ -14,7 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
 
@@ -26,9 +25,9 @@ from flare.views import register
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^flare/', include('flare.urls')),
+    url(r'^accounts/register/$', register, name ='register'),
     url(r'^accounts/login', login,{'template_name':'login.html'}, name = 'login'),
-    url(r'^accounts/logout',logout,{'next_page': '/flare'}, name = 'logout'),
-    url(r'^accounts/register/$', register, name ='register')
-]
+    url(r'^accounts/logout',logout,{'next_page':'/flare'}, name = 'logout'),
 
+]
 urlpatterns += static(settings.STATIC_URL)
