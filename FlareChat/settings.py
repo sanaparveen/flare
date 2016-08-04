@@ -57,6 +57,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'FlareChat.urls'
@@ -83,7 +84,7 @@ WSGI_APPLICATION = 'FlareChat.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -94,6 +95,14 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+'''
+
+import dj_database_url
+db_from_env = dj_database_url.config()
+DATABASES = {}
+DATABASES['default'].update(db_from_env)
+
+
 
 
 # Password validation
@@ -128,11 +137,25 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+'''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+'''
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 CHANNEL_LAYERS = {
