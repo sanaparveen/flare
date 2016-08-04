@@ -15,7 +15,7 @@ class ChatGroups(models.Model):
 class Messages(models.Model):
     creator = models.TextField()
     text_message = models.TextField(default = None)
-    timestamp    = models.DateTimeField(default = timezone.localtime(timezone.now()), db_index = True)
+    timestamp    = models.DateTimeField(default=timezone.now, db_index = True)
     group_obj    = models.ForeignKey(ChatGroups, on_delete= models.CASCADE, related_name = 'messages')
 
     def __unicode__(self):

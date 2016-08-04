@@ -20,6 +20,12 @@ def welcome(request):
     else:
         return render_to_response('flare/index.html')
 
+def welcome1(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('groups_list'))
+    else:
+        return render_to_response('flare/index.html')
+
 def homepage(request):
     if request.user.is_authenticated():
         return render_to_response('flare/homepage.html', {'user': request.user,})
@@ -36,7 +42,7 @@ def register(request):
                 password=form.cleaned_data['password1'],
                 email=form.cleaned_data['email']
             )
-            return HttpResponseRedirect('../../flare/groups_list')
+            return HttpResponseRedirect('../../accounts/login/')
     else:
         form = RegistrationForm()
     variables = RequestContext(request, {

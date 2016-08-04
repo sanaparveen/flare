@@ -21,13 +21,14 @@ from django.contrib import admin
 from django.contrib.auth.views import login, logout
 from django.conf import settings
 from flare.views import register
-
+from flare import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^flare/', include('flare.urls')),
     url(r'^accounts/register/$', register, name ='register'),
     url(r'^accounts/login', login,{'template_name':'login.html'}, name = 'login'),
     url(r'^accounts/logout',logout,{'next_page':'/flare'}, name = 'logout'),
+    url(r'^$', views.welcome1, name='index'),
 
 ]
 urlpatterns += static(settings.STATIC_URL)

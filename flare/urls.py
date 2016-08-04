@@ -13,5 +13,4 @@ urlpatterns = [
     url(r'^groups/(?P<pk>[0-9]+)/members/$', GroupDetailView.as_view(), name = 'details'),
     url(r'^groups/(?P<pk>[0-9]+)/update/$',  GroupUpdateView.as_view(), name = 'update'),
     url(r'^groups/(?P<pk>[0-9]+)/delete/$',  GroupDeleteView.as_view(), name = 'delete'),
-
 ]
